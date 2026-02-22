@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-Amulet | Coming Soon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --gold-text: #b89130; /* ロゴの色味に合わせた落ち着いたゴールド */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            font-family: 'Shippori+Mincho', serif;
+            color: var(--gold-text);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 背景の微細なテクスチャ */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0) 0%, rgba(245,245,245,0.8) 100%);
+            z-index: -1;
+        }
+
+        /* マウスに追従する光 */
+        .cursor-glow {
+            position: fixed;
+            width: 500px; /* 少し広げてより柔らかく */
+            height: 500px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, rgba(255,255,255,0) 60%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            transform: translate(-50%, -50%);
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        /* ロゴ画像のスタイル */
+        .main-logo-img {
+            width: 180px; /* デザインに合わせて適宜調整してください */
+            height: auto;
+            display: block;
+            margin: 0 auto 30px auto; /* 下に余白を追加 */
+            opacity: 0; /* JSでフェードイン */
+            filter: drop-shadow(0 4px 6px rgba(212, 175, 55, 0.15)); /* ほんのりとした影で立体感を強調 */
+        }
+
+        /* テキストエリア */
+        .copy-area {
+            opacity: 0; /* JSでフェードイン */
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            letter-spacing: 0.8rem;
+            margin: 0 0 20px 0;
+            font-weight: 400;
+            color: var(--gold-text);
+        }
+
+        p {
+            font-size: 0.9rem;
+            letter-spacing: 0.3rem;
+            color: #999; /* 少しグレー寄りにしてロゴを引き立てる */
+            margin-bottom: 40px;
+        }
+
+        /* 入力フォーム */
+        .notify-form {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        input[type="email"] {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            width: 250px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.3s;
+            color: #666;
+        }
+
+        input[type="email"]:focus {
+            border-color: var(--gold-text);
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--gold-text);
+            color: var(--gold-text);
+            padding: 10px 25px;
+            cursor: pointer;
+            font-family: inherit;
+            letter-spacing: 0.1rem;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: var(--gold-text);
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-overlay"></div>
+    <div class="cursor-glow" id="glow"></div>
+
+    <div class="container">
+        <img src="c-amulet.png" alt="C-Amulet Logo" class="main-logo-img">
+        
+        <div class="copy-area">
+            <p>運命を、美しく纏う。</p>
+            
+            <div class="notify-form">
+                <input type="email" placeholder="Email Address">
+                <button>PRE-REGISTER</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = () => {
+            const tl = gsap.timeline();
+
+            // 1. ロゴとテキストが順番にフェードイン＆上昇
+            tl.fromTo(".main-logo-img", 
+                { opacity: 0, y: 30 }, 
+                { duration: 1.8, opacity: 1, y: 0, ease: "power3.out" }
+            )
+            .fromTo(".copy-area", 
+                { opacity: 0, y: 20 }, 
+                { duration: 1.5, opacity: 1, y: 0, ease: "power2.out" }, 
+                "-=1.2" // ロゴのアニメーションが終わる前に開始
+            );
+
+            // 2. ロゴの恒常的な浮遊アニメーション（ゆらぎ）
+            gsap.to(".main-logo-img", {
+                y: -12, // 上下に動く幅
+                duration: 2.5, // 1回の動きにかかる時間
+                repeat: -1, // 無限に繰り返す
+                yoyo: true, // 行ったり来たりさせる
+                ease: "sine.inOut", // 滑らかな動き
+                delay: 1.8 // フェードインが終わってから開始
+            });
+        };
+
+        // 3. マウス追従する光のアニメーション
+        const glow = document.getElementById('glow');
+        window.addEventListener('mousemove', (e) => {
+            gsap.to(glow, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 1.5, // 少し遅れてついてくる感じで上品に
+                ease: "power2.out"
+            });
+        });
+    </script>
+</body>
+</html>
